@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace PRSProject.Models
 {
@@ -30,6 +31,7 @@ namespace PRSProject.Models
         public bool IsReviewer { get; set; }
         public bool IsAdmin { get; set; }
 
-        //TODO: Add navigation property to requests
+        [JsonIgnore]
+        public List<Request>? Requests { get; set; }
     }
 }

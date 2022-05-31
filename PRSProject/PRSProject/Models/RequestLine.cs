@@ -1,4 +1,6 @@
-﻿namespace PRSProject.Models
+﻿using System.Text.Json.Serialization;
+
+namespace PRSProject.Models
 {
     public class RequestLine
     {
@@ -7,5 +9,7 @@
         public int ProductId { get; set; }
         public int Quantity { get; set; }
 
+        [JsonIgnore]
+        public List<Product>? Products { get; set; }
     }
 }

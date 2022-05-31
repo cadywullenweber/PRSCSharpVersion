@@ -30,6 +30,6 @@ namespace PRSProject.Models
         public Vendor? Vendor { get; set; }
        
         [JsonIgnore]
-        public List<RequestLine> RequestLines { get; set; }
+        public List<RequestLine>? RequestLines { get; set; }
     }
 }

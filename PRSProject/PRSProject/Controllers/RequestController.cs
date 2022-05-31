@@ -62,15 +62,16 @@ namespace PRSProject.Controllers
 
         // PUT: api/Request/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutRequest(int id, Request request)
+        [HttpPut("{id}/approve")]
+        public async Task<IActionResult> PutRequestApprove(int id)
         {
-            if (id != request.Id)
+            var request = await _context.Requests.FindAsync(id);
+            if (request == null) 
             {
                 return BadRequest();
             }
 
-            _context.Entry(request).State = EntityState.Modified;
+            request.Status = "APPROVED";
 
             try
             {
@@ -123,16 +124,16 @@ namespace PRSProject.Controllers
         }
         // PUT: api/Request/5/approve
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}/approve")]
-        public async Task<IActionResult> PutApprove(int id, Request request)
+        [HttpPut("{id}/reject")]
+        public async Task<IActionResult> PutReject(int id)
         {
-            var approve = await _context.Requests.FindAsync(id);
+            var request = await _context.Requests.FindAsync(id);
             if (request == null)
             {
                 return NotFound();
             }
 
-            _context.Entry(request).State = EntityState.Modified;
+            request.Status = "REJECTED";
 
             try
             {
