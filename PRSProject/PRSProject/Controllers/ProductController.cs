@@ -9,7 +9,7 @@ using PRSProject.Models;
 
 namespace PRSProject.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/products")] //Is set to default to specified route (https://localhost:###/api/products)
     [ApiController]
     public class ProductController : ControllerBase
     {

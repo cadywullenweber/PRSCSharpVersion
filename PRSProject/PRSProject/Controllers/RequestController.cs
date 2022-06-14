@@ -9,7 +9,7 @@ using PRSProject.Models;
 
 namespace PRSProject.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/requests")] //Sets default URL (https://localhost:###/api/requests)
     [ApiController]
     public class RequestController : ControllerBase
     {
@@ -20,7 +20,7 @@ namespace PRSProject.Controllers
             _context = context;
         }
 
-        // GET: api/Request
+        // GET: api/requests - Lists ALL requests on table
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Request>>> GetRequests()
         {
@@ -42,7 +42,7 @@ namespace PRSProject.Controllers
             return await _context.Requests.Where(r => r.Status == "REVIEW" && r.UserId != id).ToListAsync();
         }
 
-        // GET: api/Request/5
+        // GET: api/requests/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Request>> GetRequest(int id)
         {
@@ -60,13 +60,41 @@ namespace PRSProject.Controllers
             return request;
         }
 
-        // PUT: api/Request/5
+        //PUT: api/requests/id#
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutRequest(int id, Request request)
+        { if (id != request.Id)
+            {
+                return BadRequest("ID's do not match"); //404 error
+            }
+            _context.Entry(request).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!RequestExists(id))
+                {
+                    return NotFound("No request found");
+
+                }
+                else
+                {
+                    throw; 
+                } 
+            }
+            return NoContent();
+        }
+
+        // PUT: api/requests/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}/approve")]
         public async Task<IActionResult> PutRequestApprove(int id)
         {
             var request = await _context.Requests.FindAsync(id);
-            if (request == null) 
+            if (request == null)
             {
                 return BadRequest();
             }
@@ -92,7 +120,7 @@ namespace PRSProject.Controllers
             return NoContent();
         }
 
-        // PUT: api/Request/5/review
+        // PUT: api/requests/5/review
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}/review")]
         public async Task<IActionResult> PutRequestReview(int id)
@@ -122,7 +150,7 @@ namespace PRSProject.Controllers
             return NoContent();
 
         }
-        // PUT: api/Request/5/approve
+        // PUT: api/Request/5/reject
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}/reject")]
         public async Task<IActionResult> PutReject(int id)
@@ -154,22 +182,22 @@ namespace PRSProject.Controllers
             return NoContent();
         }
 
-        // POST: api/Request
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //POST: api/requests
+        //To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Request>> PostRequest(Request request)
         {
-          if (_context.Requests == null)
-          {
-              return Problem("Entity set 'PRSDb.Requests'  is null.");
-          }
+            if (_context.Requests == null)
+            {
+                return Problem("Entity set 'PRSDb.Requests'  is null.");
+            }
             _context.Requests.Add(request);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetRequest", new { id = request.Id }, request);
         }
 
-        // DELETE: api/Request/5
+        // DELETE: api/requests/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRequest(int id)
         {
@@ -188,7 +216,7 @@ namespace PRSProject.Controllers
 
             return NoContent();
         }
-
+   
         private bool RequestExists(int id)
         {
             return (_context.Requests?.Any(e => e.Id == id)).GetValueOrDefault();

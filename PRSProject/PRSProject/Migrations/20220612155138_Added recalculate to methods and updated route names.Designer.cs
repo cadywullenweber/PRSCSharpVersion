@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PRSProject.Models;
 
@@ -10,9 +11,10 @@ using PRSProject.Models;
 namespace PRSProject.Migrations
 {
     [DbContext(typeof(PRSDb))]
-    partial class PRSDbModelSnapshot : ModelSnapshot
+    [Migration("20220612155138_Added recalculate to methods and updated route names")]
+    partial class Addedrecalculatetomethodsandupdatedroutenames
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -20,6 +22,21 @@ namespace PRSProject.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("ProductRequestLine", b =>
+                {
+                    b.Property<int>("ProductsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequestLinesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductsId", "RequestLinesId");
+
+                    b.HasIndex("RequestLinesId");
+
+                    b.ToTable("ProductRequestLine");
+                });
 
             modelBuilder.Entity("PRSProject.Models.Product", b =>
                 {
@@ -75,10 +92,8 @@ namespace PRSProject.Migrations
 
                     b.Property<string>("DeliveryMode")
                         .IsRequired()
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
-                        .HasDefaultValue("Pickup");
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -96,10 +111,8 @@ namespace PRSProject.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)")
-                        .HasDefaultValue("Active");
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(11,2)");
@@ -132,8 +145,6 @@ namespace PRSProject.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
 
                     b.HasIndex("RequestId");
 
@@ -244,6 +255,21 @@ namespace PRSProject.Migrations
                     b.ToTable("Vendors");
                 });
 
+            modelBuilder.Entity("ProductRequestLine", b =>
+                {
+                    b.HasOne("PRSProject.Models.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PRSProject.Models.RequestLine", null)
+                        .WithMany()
+                        .HasForeignKey("RequestLinesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("PRSProject.Models.Product", b =>
                 {
                     b.HasOne("PRSProject.Models.Vendor", "Vendor")
@@ -268,26 +294,11 @@ namespace PRSProject.Migrations
 
             modelBuilder.Entity("PRSProject.Models.RequestLine", b =>
                 {
-                    b.HasOne("PRSProject.Models.Product", "Product")
-                        .WithMany("RequestLines")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PRSProject.Models.Request", "Request")
+                    b.HasOne("PRSProject.Models.Request", null)
                         .WithMany("RequestLines")
                         .HasForeignKey("RequestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("Request");
-                });
-
-            modelBuilder.Entity("PRSProject.Models.Product", b =>
-                {
-                    b.Navigation("RequestLines");
                 });
 
             modelBuilder.Entity("PRSProject.Models.Request", b =>

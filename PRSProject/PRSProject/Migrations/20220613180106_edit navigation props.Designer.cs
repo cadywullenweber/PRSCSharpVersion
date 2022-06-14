@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PRSProject.Models;
 
@@ -10,9 +11,10 @@ using PRSProject.Models;
 namespace PRSProject.Migrations
 {
     [DbContext(typeof(PRSDb))]
-    partial class PRSDbModelSnapshot : ModelSnapshot
+    [Migration("20220613180106_edit navigation props")]
+    partial class editnavigationprops
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -75,10 +77,8 @@ namespace PRSProject.Migrations
 
                     b.Property<string>("DeliveryMode")
                         .IsRequired()
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
-                        .HasDefaultValue("Pickup");
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -268,21 +268,17 @@ namespace PRSProject.Migrations
 
             modelBuilder.Entity("PRSProject.Models.RequestLine", b =>
                 {
-                    b.HasOne("PRSProject.Models.Product", "Product")
+                    b.HasOne("PRSProject.Models.Product", null)
                         .WithMany("RequestLines")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PRSProject.Models.Request", "Request")
+                    b.HasOne("PRSProject.Models.Request", null)
                         .WithMany("RequestLines")
                         .HasForeignKey("RequestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("Request");
                 });
 
             modelBuilder.Entity("PRSProject.Models.Product", b =>

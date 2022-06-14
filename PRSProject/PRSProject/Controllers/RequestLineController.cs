@@ -9,7 +9,7 @@ using PRSProject.Models;
 
 namespace PRSProject.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/requestlines")]
     [ApiController]
     public class RequestLineController : ControllerBase
     {
@@ -77,6 +77,8 @@ namespace PRSProject.Controllers
                 }
             }
 
+            RecalculateRequestTotal(requestLine.RequestId);
+
             return NoContent();
         }
 
@@ -91,6 +93,8 @@ namespace PRSProject.Controllers
           }
             _context.RequestLines.Add(requestLine);
             await _context.SaveChangesAsync();
+
+            RecalculateRequestTotal(requestLine.RequestId);
 
             return CreatedAtAction("GetRequestLine", new { id = requestLine.Id }, requestLine);
         }
@@ -112,14 +116,17 @@ namespace PRSProject.Controllers
             _context.RequestLines.Remove(requestLine);
             await _context.SaveChangesAsync();
 
+            RecalculateRequestTotal(requestLine.RequestId);
+
             return NoContent();
         }
+
         private void RecalculateRequestTotal(int requestId)
         {
             decimal total = (from r in _context.RequestLines
-                              join p in _context.Products on r.ProductId equals p.Id
-                              where r.Id == requestId
-                              select new { total = (r.Quantity * p.Price) }).Sum(t => t.total);
+                             join p in _context.Products on r.ProductId equals p.Id
+                             where r.Id == requestId
+                             select new { total = (r.Quantity * p.Price) }).Sum(t => t.total);
             var request = _context.Requests.FirstOrDefault(r => r.Id == requestId);
             if (request == null)
             {
@@ -127,6 +134,7 @@ namespace PRSProject.Controllers
             }
             _context.SaveChanges();
         }
+
         private bool RequestLineExists(int id)
         {
             return (_context.RequestLines?.Any(e => e.Id == id)).GetValueOrDefault();

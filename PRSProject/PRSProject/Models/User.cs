@@ -8,11 +8,12 @@ namespace PRSProject.Models
     [Index(nameof(Username), IsUnique = true)]
     public class User
     {
+      
         [Key]
         public int Id { get; set; }
 
         [StringLength(30)]
-        public string Username { get; set; } 
+        public string Username { get; set; }
 
         [StringLength(30)]
         public string Password { get; set; }
@@ -27,7 +28,7 @@ namespace PRSProject.Models
         public string? Phone { get; set; }
        
         [StringLength(255)]
-        public string? Email { get; set; }
+        public string? Email { get; set; } 
         public bool IsReviewer { get; set; }
         public bool IsAdmin { get; set; }
 

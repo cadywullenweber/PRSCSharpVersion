@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
@@ -6,6 +7,7 @@ namespace PRSProject.Models
 {
     public class Request
     {
+        [Key]
         public int Id { get; set; }
 
         [StringLength(80)]
@@ -31,7 +33,8 @@ namespace PRSProject.Models
         public User? User { get; set; }
 
         [JsonIgnore]
-        public List<RequestLine>? RequestLines { get; set; }    
+        public List<RequestLine>? RequestLines { get; set; }
+ 
 
 
     }

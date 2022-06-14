@@ -9,7 +9,7 @@ using PRSProject.Models;
 
 namespace PRSProject.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/vendors")]
     [ApiController]
     public class VendorController : ControllerBase
     {

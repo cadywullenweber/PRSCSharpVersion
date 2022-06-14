@@ -7,6 +7,7 @@ namespace PRSProject.Models
     [Index(nameof(Code), IsUnique = true)]
     public class Vendor
     {
+        [Key]
         public int Id { get; set; }
 
         [StringLength(30)]
