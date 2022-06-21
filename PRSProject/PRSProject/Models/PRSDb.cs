@@ -20,7 +20,7 @@ namespace PRSProject.Models
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Request>().Property(p => p.Status).HasDefaultValue("Active");
+            modelBuilder.Entity<Request>().Property(p => p.Status).HasDefaultValue("NEW");
             modelBuilder.Entity<Request>().Property(d => d.DeliveryMode).HasDefaultValue("Pickup");
             base.OnModelCreating(modelBuilder);
         }

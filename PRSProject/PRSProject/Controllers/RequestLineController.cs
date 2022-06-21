@@ -20,25 +20,25 @@ namespace PRSProject.Controllers
             _context = context;
         }
 
-        // GET: api/RequestLine
+        // GET: api/requestlines
         [HttpGet]
         public async Task<ActionResult<IEnumerable<RequestLine>>> GetRequestLines()
         {
-          if (_context.RequestLines == null)
-          {
-              return NotFound();
-          }
+            if (_context.RequestLines == null)
+            {
+                return NotFound();
+            }
             return await _context.RequestLines.ToListAsync();
         }
 
-        // GET: api/RequestLine/5
+        // GET: api/requestlines/5
         [HttpGet("{id}")]
         public async Task<ActionResult<RequestLine>> GetRequestLine(int id)
         {
-          if (_context.RequestLines == null)
-          {
-              return NotFound();
-          }
+            if (_context.RequestLines == null)
+            {
+                return NotFound();
+            }
             var requestLine = await _context.RequestLines.FindAsync(id);
 
             if (requestLine == null)
@@ -49,7 +49,7 @@ namespace PRSProject.Controllers
             return requestLine;
         }
 
-        // PUT: api/RequestLine/5
+        // PUT: api/requestlines/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutRequestLine(int id, RequestLine requestLine)
@@ -82,7 +82,7 @@ namespace PRSProject.Controllers
             return NoContent();
         }
 
-        // POST: api/RequestLine
+        // POST: api/requestlines
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<RequestLine>> PostRequestLine(RequestLine requestLine)
@@ -99,7 +99,7 @@ namespace PRSProject.Controllers
             return CreatedAtAction("GetRequestLine", new { id = requestLine.Id }, requestLine);
         }
 
-        // DELETE: api/RequestLine/5
+        // DELETE: api/requestlines/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRequestLine(int id)
         {
@@ -112,23 +112,26 @@ namespace PRSProject.Controllers
             {
                 return NotFound();
             }
-
+            int requestid = requestLine.RequestId;
             _context.RequestLines.Remove(requestLine);
             await _context.SaveChangesAsync();
-
-            RecalculateRequestTotal(requestLine.RequestId);
+            
+            RecalculateRequestTotal(requestid);
 
             return NoContent();
         }
 
         private void RecalculateRequestTotal(int requestId)
         {
-            decimal total = (from r in _context.RequestLines
-                             join p in _context.Products on r.ProductId equals p.Id
-                             where r.Id == requestId
-                             select new { total = (r.Quantity * p.Price) }).Sum(t => t.total);
+         
+         
+           decimal total = _context.RequestLines.Include(r => r.Product)
+                .Where(r => r.RequestId == requestId)
+                .Sum(r => r.Product.Price * r.Quantity);
+
+            //update request
             var request = _context.Requests.FirstOrDefault(r => r.Id == requestId);
-            if (request == null)
+            if (request != null)
             {
                 request.Total = total;
             }

@@ -49,7 +49,7 @@ namespace PRSProject.Controllers
             return vendor;
         }
 
-        // PUT: api/Vendor/5
+        // PUT: api/Vendor
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutVendor(int id, Vendor vendor)

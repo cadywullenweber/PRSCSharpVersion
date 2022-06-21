@@ -20,10 +20,10 @@ namespace PRSProject.Models
         public string? RejectionReason { get; set; }
 
         [StringLength(20)]
-        public string DeliveryMode { get; set; }
+        public string DeliveryMode { get; set; } = "Pickup";
 
         [StringLength(10)]
-        public string Status { get; set; }
+        public string Status { get; set; } = "NEW";
 
         [Column(TypeName = "decimal(11, 2)")]
         public decimal Total { get; set; }

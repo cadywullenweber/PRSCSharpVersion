@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PRSProject.Models;
 
@@ -10,9 +11,10 @@ using PRSProject.Models;
 namespace PRSProject.Migrations
 {
     [DbContext(typeof(PRSDb))]
-    partial class PRSDbModelSnapshot : ModelSnapshot
+    [Migration("20220619225459_changed default to new")]
+    partial class changeddefaulttonew
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -9,7 +9,7 @@ using PRSProject.Models;
 
 namespace PRSProject.Controllers
 {
-    [Route("api/requests")] //Sets default URL (https://localhost:###/api/requests)
+    [Route("api/requests")] //Sets default URL (https://localhost:####/api/requests)
     [ApiController]
     public class RequestController : ControllerBase
     {
@@ -60,13 +60,15 @@ namespace PRSProject.Controllers
             return request;
         }
 
-        //PUT: api/requests/id#
+        //PUT: api/requests -- Creates new request
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRequest(int id, Request request)
-        { if (id != request.Id)
+        public async Task<IActionResult> PutRequestLine(int id, Request request)
+        {
+            if (id != request.Id)
             {
-                return BadRequest("ID's do not match"); //404 error
+                return BadRequest();
             }
+
             _context.Entry(request).State = EntityState.Modified;
 
             try
@@ -77,18 +79,17 @@ namespace PRSProject.Controllers
             {
                 if (!RequestExists(id))
                 {
-                    return NotFound("No request found");
-
+                    return NotFound();
                 }
                 else
                 {
-                    throw; 
-                } 
+                    throw;
+                }
             }
             return NoContent();
         }
 
-        // PUT: api/requests/5
+        // PUT: api/requests/5/approve
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}/approve")]
         public async Task<IActionResult> PutRequestApprove(int id)
@@ -150,7 +151,7 @@ namespace PRSProject.Controllers
             return NoContent();
 
         }
-        // PUT: api/Request/5/reject
+        // PUT: api/requests/5/reject
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}/reject")]
         public async Task<IActionResult> PutReject(int id)
